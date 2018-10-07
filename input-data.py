@@ -1,3 +1,5 @@
+# 単発音を検知したら、/sounds/に保存して行く
+
 import pyaudio
 import sys
 import time
@@ -45,6 +47,7 @@ all = []
 # tmpは常に同じ長さ
 tmp = [False for i in range(0, 20)]
 
+print("検出を始めます。" + str(RECORD_SECONDS) + "秒間です")
 for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
     # dataが(RECORD_SECONDS / 128)秒でのデータ
     # このままではバイナリーデータなので変換する必要がある
@@ -92,7 +95,16 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 
         # 検出した部分をwavファイルで保存
         now = datetime.datetime.now()
-        file_name = 'sounds/{0:%Y%m%d%H%M%S}.wav'.format(now)
+
+        isFinger = input("finger:1 \nnot finger: 2 \n>> ")
+        if isFinger == "1":
+            file_name = 'sounds/finger/{0:%Y%m%d%H%M%S}.wav'.format(now)
+        elif isFinger == "2":
+            file_name = 'sounds/not-finger/{0:%Y%m%d%H%M%S}.wav'.format(now)
+        else:
+            print("1 or 2を入力してください")
+            break
+
         wf = wave.open(file_name, 'wb')
         wf.setnchannels(CHANNELS)
         wf.setsampwidth(p.get_sample_size(FORMAT))
@@ -101,6 +113,8 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         wf.close()
 
         tmp = [False for i in range(0, 20)]
+        print("検出を終了します")
+        break
 #        try:
 #            with urllib.request.urlopen('http://localhost:8000/') as response:
 #               html = response.read()
@@ -111,7 +125,7 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 stream.close()
 p.terminate()
 
-data = b''.join(all)
+#data = b''.join(all)
 
 #x = np.frombuffer(data, dtype="int16") / 32768.0
 ## x.shape >> (132096,) *3秒の時
