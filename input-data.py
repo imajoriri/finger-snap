@@ -5,9 +5,9 @@ import wave
 import numpy as np
 import matplotlib.pyplot as plt
 import urllib.request
+import datetime
 
 def plot_x(x, N):
-
     # 波形を描画
     plt.subplot(311)  # 3行1列のグラフの1番目の位置にプロット
     plt.plot(range(N), x)
@@ -16,7 +16,6 @@ def plot_x(x, N):
     plt.ylabel("amplitude")
 
 def plot_X(freqList, fs):
-    
     plt.subplot(312)  # 3行1列のグラフの1番目の位置にプロット
     plt.plot(freqList, amplitudeSpectrum, marker= 'o', linestyle='-')
     plt.axis([0, fs/2, 0, 50])
@@ -85,17 +84,28 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         amplitudeSpectrum = [np.sqrt(c.real ** 2 + c.imag ** 2) for c in X]
         freqList = np.fft.fftfreq(N, d) # (FFTのサンプル数(2**n), 1.0/fs) >> fsはサンプリングレート
 
+        # プロット
         #plot_x(x, N)
-        plot_X(freqList, fs)
+        #plot_X(freqList, fs)
 
-        plt.show()
+        #plt.show()
+
+        # 検出した部分をwavファイルで保存
+        now = datetime.datetime.now()
+        file_name = 'sounds/{0:%Y%m%d%H%M%S}.wav'.format(now)
+        wf = wave.open(file_name, 'wb')
+        wf.setnchannels(CHANNELS)
+        wf.setsampwidth(p.get_sample_size(FORMAT))
+        wf.setframerate(RATE)
+        wf.writeframes(b''.join(big_point_data))
+        wf.close()
 
         tmp = [False for i in range(0, 20)]
-        try:
-            with urllib.request.urlopen('http://localhost:8000/') as response:
-               html = response.read()
-        except:
-            print('get時のエラー')
+#        try:
+#            with urllib.request.urlopen('http://localhost:8000/') as response:
+#               html = response.read()
+#        except:
+#            print('get時のエラー')
 
 
 stream.close()
