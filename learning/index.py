@@ -43,9 +43,11 @@ learning.execution(2000, sess, x, p, t, loss, train_step, correct_prediction, ac
 # TODO 保存する場合
 #saver.save(sess, project_dir + "./model_data/model.ckpt")
 # --- テスト ---
-result = sess.run(p, feed_dict={x: [train_x[0]]})
-print(train_t[0])
-print(result)
+#result = sess.run(p, feed_dict={x: [train_x[10]]})
+print(type(train_x[0]))
+result = sess.run(p, feed_dict={x: train_x})
+#for i in range(len(result)):
+#    print(str(result[i]) + ":" + str(train_t[i]))
 
 # --- graph ---
 #train_set1 = train_set[train_set['t']==1]

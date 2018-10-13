@@ -7,8 +7,8 @@
 # 隠れ層
 
 def double_layer(tf, data_len):
-    num_units1 = 4
-    num_units2 = 4
+    num_units1 = 16
+    num_units2 = 16
     
     x = tf.placeholder(tf.float32, [None, data_len])
     
@@ -26,8 +26,11 @@ def double_layer(tf, data_len):
     
     t = tf.placeholder(tf.float32, [None, 1])
     loss = -tf.reduce_sum(t*tf.log(p) + (1-t)*tf.log(1-p))
+    # lossを小さくして行く方法
     train_step = tf.train.GradientDescentOptimizer(0.001).minimize(loss)
+    # equalは、一致しているかどうか。signは符号を返す
     correct_prediction = tf.equal(tf.sign(p-0.5), tf.sign(t-0.5))
+    # 与えたリストの平均値を求める。castは型変換。correct_prediction(true or false)を0 or 1に
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     
     return x, p, t, loss, train_step, correct_prediction, accuracy
