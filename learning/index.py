@@ -29,7 +29,7 @@ train_x, train_t = sound_data.add_train_data(project_dir + "./sounds/not-finger/
 train_t = train_t.reshape([len(train_t), 1])
 
 # アルゴリズム作成
-x, p, t, loss, train_step, correct_prediction, accuracy = learning_algorithm.double_layer(tf, data_len)
+x, p, t, loss, train_step, correct_prediction, accuracy, y = learning_algorithm.double_layer(tf, data_len)
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
@@ -38,10 +38,16 @@ saver = tf.train.Saver()
 #saver.restore(sess, project_dir + "./model_data/model.ckpt")
 
 # 学習の実行
-learning.execution(2000, sess, x, p, t, loss, train_step, correct_prediction, accuracy, train_x, train_t)
+learning_num = 10000
+learning.execution(learning_num, sess, x, p, t, loss, train_step, correct_prediction, accuracy, train_x, train_t, y)
+
+print("正解データ数は:" + str(len(finger_wav_files)))
+print("不正解データ数は:" + str(len(not_finger_wav_files)))
+print("学習回数は: " + str(learning_num))
 
 # TODO 保存する場合
-#saver.save(sess, project_dir + "./model_data/model.ckpt")
+saver.save(sess, project_dir + "./model_data/model.ckpt")
+
 # --- テスト ---
 #result = sess.run(p, feed_dict={x: [train_x[10]]})
 print(type(train_x[0]))

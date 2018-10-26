@@ -29,7 +29,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 # 検知する時間
-RECORD_SECONDS = 3
+RECORD_SECONDS = 500
 
 p = pyaudio.PyAudio()
 
@@ -58,7 +58,7 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
     all.append(byte_data)
 
     # 閾値
-    threshold = 0.9
+    threshold = 0.8
 
     # npDataの中にthresoldより大きい数字があるかどうか
     isThresholdOver = int_data[int_data >= threshold].sum() >= 1
@@ -88,8 +88,8 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         freqList = np.fft.fftfreq(N, d) # (FFTのサンプル数(2**n), 1.0/fs) >> fsはサンプリングレート
 
         # プロット
-        #plot_x(x, N)
-        #plot_X(freqList, fs)
+        plot_x(x, N)
+        plot_X(freqList, fs)
 
         #plt.show()
 

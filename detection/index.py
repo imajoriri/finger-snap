@@ -8,25 +8,26 @@ import urllib.request
 import tensorflow as tf
 import datetime
 
+import wave_sound
+
 import sys
 project_dir = "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/"
 sys.path.append(project_dir + "learning/")
 import learning_algorithm
 
 data_len = 2048
-x, p, t, loss, train_step, correct_prediction, accuracy = learning_algorithm.double_layer(tf, data_len)
+x, p, t, loss, train_step, correct_prediction, accuracy, y = learning_algorithm.double_layer(tf, data_len)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 saver.restore(sess, project_dir + "./model_data/model.ckpt")
-
 
 chunk = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 # 検知する時間
-RECORD_SECONDS = 20
+RECORD_SECONDS = 100
 
 pa = pyaudio.PyAudio()
 
@@ -74,13 +75,24 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         X = np.fft.fft(data)
         amplitudeSpectrum = [np.sqrt(c.real ** 2 + c.imag ** 2) for c in X]
 
+        #wave_sound.play_wave("./web_text_api/detection.wav")
+
+        #fs = 44100
+        #N = chunk * len(big_point_data) # FFTのサンプル数
+        #d = 1.0/fs
+        #freqList = np.fft.fftfreq(N, d) # (FFTのサンプル数(2**n), 1.0/fs) >> fsはサンプリングレート
+        #plot_X(freqList, fs)
+        #plt.show()
+
         # 確率を算出
         result = sess.run(p, feed_dict={x: np.array([amplitudeSpectrum])})
-        #print(result)
+        print('これがフィンガースナップである確率確率>>' + str(result[0][0]))
         if(result[0] >= 0.5):
             print('これは指パッチンです\n')
+            #wave_sound.play_wave("./web_text_api/isFinger.wav")
         else: 
             print('これは指パッチンではないです\n')
+            #wave_sound.play_wave("./web_text_api/isNotFinger.wav")
 
 
         tmp = [False for i in range(0, 20)]
