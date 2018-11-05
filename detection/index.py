@@ -10,6 +10,8 @@ import datetime
 
 import wave_sound
 
+# original modules
+import detected_processing
 import sys
 project_dir = "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/"
 sys.path.append(project_dir + "learning/")
@@ -22,7 +24,8 @@ sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 saver.restore(sess, project_dir + "./model_data/model.ckpt")
 
-chunk = 1024
+#chunk = 1024
+chunk = 2**10
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
@@ -45,18 +48,13 @@ all = []
 # tmpは常に同じ長さ
 tmp = [False for i in range(0, 20)]
 
-# 1回のループで
-# tmpの最後に閾値より大きいか大きくないかをTrue or Falseで入れる
-# tmpの最初をとる
+print('指パッチンの検出を始めます')
 for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
-    # dataが(RECORD_SECONDS / 128)秒でのデータ
-    # このままではバイナリーデータなので変換する必要がある
-    # np.frombuffer(data, dtype="int16") / 32768.0
 
     data = stream.read(chunk)
     npData = np.frombuffer(data, dtype="int16") / 32768.0
     # 閾値
-    threshold = 0.85
+    threshold = 0.3
 
     # npDataの中にthresoldより大きい数字があるかどうか
     isThresholdOver = npData[npData >= threshold].sum() >= 1
@@ -83,12 +81,15 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         #freqList = np.fft.fftfreq(N, d) # (FFTのサンプル数(2**n), 1.0/fs) >> fsはサンプリングレート
         #plot_X(freqList, fs)
         #plt.show()
+        #print("フィンガースナップを検出しました。")
 
         # 確率を算出
         result = sess.run(p, feed_dict={x: np.array([amplitudeSpectrum])})
         print('これがフィンガースナップである確率確率>>' + str(result[0][0]))
         if(result[0] >= 0.5):
             print('これは指パッチンです\n')
+            #detected_processing.do_get('http://localhost')
+            detected_processing.change_my_room_color()
             #wave_sound.play_wave("./web_text_api/isFinger.wav")
         else: 
             print('これは指パッチンではないです\n')
@@ -96,12 +97,6 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 
 
         tmp = [False for i in range(0, 20)]
-        #try:
-        #    with urllib.request.urlopen('http://localhost:8000/') as response:
-        #       html = response.read()
-        #except:
-        #    print('get時のエラー')
-
     all.append(data)
 
 stream.close()

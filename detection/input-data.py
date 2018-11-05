@@ -88,8 +88,9 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         freqList = np.fft.fftfreq(N, d) # (FFTのサンプル数(2**n), 1.0/fs) >> fsはサンプリングレート
 
         # プロット
-        plot_x(x, N)
-        plot_X(freqList, fs)
+        #plot_x(x, N)
+        #plot_X(freqList, fs)
+        #plt.show()
 
         #plt.show()
 
