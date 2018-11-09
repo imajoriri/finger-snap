@@ -127,21 +127,3 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 stream.close()
 p.terminate()
 
-#data = b''.join(all)
-
-#x = np.frombuffer(data, dtype="int16") / 32768.0
-## x.shape >> (132096,) *3秒の時
-#
-#fs = 44100
-#d = 1.0/fs
-#start = 1000
-#N = 80000 # FFTのサンプル数
-#freqList = np.fft.fftfreq(N, d) # (FFTのサンプル数(2**n), 1.0/fs) >> fsはサンプリングレート
-#
-## 高速フーリエ変換
-#X = np.fft.fft(x[start:start + N])
-#print("-- finish fft---")
-#
-#amplitudeSpectrum = [np.sqrt(c.real ** 2 + c.imag ** 2) for c in X]
-
-

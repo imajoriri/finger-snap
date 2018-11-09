@@ -1,3 +1,5 @@
+# 実際に指パッチンを検出するファイル
+
 import pyaudio
 import sys
 import time
@@ -8,9 +10,8 @@ import urllib.request
 import tensorflow as tf
 import datetime
 
-import wave_sound
-
 # original modules
+import wave_sound
 import detected_processing
 import sys
 project_dir = "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/"
@@ -24,7 +25,6 @@ sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 saver.restore(sess, project_dir + "./model_data/model.ckpt")
 
-#chunk = 1024
 chunk = 2**10
 FORMAT = pyaudio.paInt16
 CHANNELS = 1

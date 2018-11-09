@@ -55,22 +55,3 @@ result = sess.run(p, feed_dict={x: train_x})
 #for i in range(len(result)):
 #    print(str(result[i]) + ":" + str(train_t[i]))
 
-# --- graph ---
-#train_set1 = train_set[train_set['t']==1]
-#train_set2 = train_set[train_set['t']==0]
-#
-#fig = plt.figure(figsize=(6,6))
-#subplot = fig.add_subplot(1,1,1)
-#subplot.set_ylim([-15,15])
-#subplot.set_xlim([-15,15])
-#subplot.scatter(train_set1.x1, train_set1.x2, marker='x')
-#subplot.scatter(train_set2.x1, train_set2.x2, marker='o')
-#
-#locations = []
-#for x2 in np.linspace(-15,15,100):
-#    for x1 in np.linspace(-15,15,100):
-#        locations.append((x1,x2))
-#p_vals = sess.run(p, feed_dict={x:locations})
-#p_vals = p_vals.reshape((100,100))
-#subplot.imshow(p_vals, origin='lower', extent=(-15,15,-15,15),
-#               cmap=plt.cm.gray_r, alpha=0.5)
