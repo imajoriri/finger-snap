@@ -8,14 +8,16 @@ import os
 import wave
 import random
 
-import learning_algorithm
+# original modules
+project_dir = "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/"
+import sys
+sys.path.append(project_dir + "my_modules/")
 import learning
 import sound_data
 
 np.random.seed(20160615)
 tf.set_random_seed(20160615)
 
-project_dir = "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/"
 finger_wav_files = os.listdir(project_dir + "./sounds/finger")
 not_finger_wav_files = os.listdir(project_dir + "./sounds/not-finger")
 
@@ -29,7 +31,7 @@ train_x, train_t = sound_data.add_train_data(project_dir + "./sounds/not-finger/
 train_t = train_t.reshape([len(train_t), 1])
 
 # アルゴリズム作成
-x, p, t, loss, train_step, correct_prediction, accuracy, y = learning_algorithm.double_layer(tf, data_len)
+x, p, t, loss, train_step, correct_prediction, accuracy, y = learning.learning_algorithm(tf, data_len)
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())

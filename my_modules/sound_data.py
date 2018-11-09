@@ -7,6 +7,7 @@ from pandas import DataFrame, Series
 import os
 import wave
 import random
+import pyaudio
 
 
 def wave_fft(file_name):
@@ -29,4 +30,24 @@ def add_train_data(dir, file_names, train_x, train_t, t):
 
     return train_x, train_t
 
+# 音声ファイルを流す
+def play_wave(file_name):
 
+    buffer_size = 4096
+    wav_file = wave.open ( file_name , 'rb' )
+    p = pyaudio.PyAudio ()
+    stream = p.open (
+                     format = p.get_format_from_width ( wav_file . getsampwidth ()) ,
+                     channels = wav_file.getnchannels () ,
+                     rate = wav_file.getframerate () ,
+                     output = True
+                     )
+    remain = wav_file.getnframes ()
+    while remain > 0:
+        buf = wav_file.readframes ( min ( buffer_size , remain ))
+        stream.write ( buf )
+        remain -= buffer_size
+    
+    stream.close ()
+    p.terminate ()
+    wav_file.close ()

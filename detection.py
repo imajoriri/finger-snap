@@ -11,15 +11,15 @@ import tensorflow as tf
 import datetime
 
 # original modules
-import wave_sound
-import detected_processing
 import sys
 project_dir = "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/"
-sys.path.append(project_dir + "learning/")
-import learning_algorithm
+sys.path.append(project_dir + "my_modules/")
+import detected_processing
+import learning
+#import wave_sound
 
 data_len = 2048
-x, p, t, loss, train_step, correct_prediction, accuracy, y = learning_algorithm.double_layer(tf, data_len)
+x, p, t, loss, train_step, correct_prediction, accuracy, y = learning.learning_algorithm(tf, data_len)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
@@ -73,7 +73,6 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         X = np.fft.fft(data)
         amplitudeSpectrum = [np.sqrt(c.real ** 2 + c.imag ** 2) for c in X]
 
-        #wave_sound.play_wave("./web_text_api/detection.wav")
 
         #fs = 44100
         #N = chunk * len(big_point_data) # FFTのサンプル数
@@ -90,10 +89,8 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
             print('これは指パッチンです\n')
             #detected_processing.do_get('http://localhost')
             detected_processing.change_my_room_color()
-            #wave_sound.play_wave("./web_text_api/isFinger.wav")
         else: 
             print('これは指パッチンではないです\n')
-            #wave_sound.play_wave("./web_text_api/isNotFinger.wav")
 
 
         tmp = [False for i in range(0, 20)]
