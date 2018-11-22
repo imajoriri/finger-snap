@@ -35,12 +35,12 @@ RECORD_SECONDS = 100
 pa = pyaudio.PyAudio()
 
 stream = pa.open(
-    format = FORMAT,
-    channels = CHANNELS,
-    rate = RATE,
-    input = True,
-    frames_per_buffer = chunk
-)
+        format = FORMAT,
+        channels = CHANNELS,
+        rate = RATE,
+        input = True,
+        frames_per_buffer = chunk
+        )
 
 # データを入れていく
 all = []
@@ -52,52 +52,28 @@ print('指パッチンの検出を始めます')
 for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 
     data = stream.read(chunk)
-    npData = np.frombuffer(data, dtype="int16") / 32768.0
-
-    # npDataの中にthresoldより大きい数字があるかどうか
-    threshold = 0.05
-    isThresholdOver = False
-    if max(npData) > 0.05:
-        isThresholdOver = True
-
-    tmp.append(isThresholdOver)
-    tmp.pop(0)
+    all.append(data)
 
     # 9,10, 11がのどれかがtrueで他がfalseだけなら反応
     # なぜか最初の10回目に誤反応するため、12回目までは反応しないようにしておく
-    if sum(tmp[9: 11]) >= 1 and sum(tmp) <= 3 and i >= 12:
-    #if i >= 12:
-        #print("単発音を認識しました。")
+    #if sum(tmp[9: 11]) >= 1 and sum(tmp) <= 3 and i >= 12:
+    if i % 2 == 0 and i >= 12:
+        #for d in range(int(len(data)/2)):
 
-        big_point_data = all[-10:-8] # 取得するbyteデータ
+
+        big_point_data = all[-3:-1] # 取得するbyteデータ
 
         big_point_data = np.frombuffer(b''.join(big_point_data), dtype="int16") / 32768.0
         X = np.fft.fft(big_point_data)
         amplitudeSpectrum = [np.sqrt(c.real ** 2 + c.imag ** 2) for c in X]
 
-
-        #fs = 44100
-        #N = chunk * len(big_point_data) # FFTのサンプル数
-        #d = 1.0/fs
-        #freqList = np.fft.fftfreq(N, d) # (FFTのサンプル数(2**n), 1.0/fs) >> fsはサンプリングレート
-        #plot_X(freqList, fs)
-        #plt.show()
-        #print("フィンガースナップを検出しました。")
-
         # 確率を算出
-        print(np.array([amplitudeSpectrum]).shape)
         result = sess.run(p, feed_dict={x: np.array([amplitudeSpectrum])})
-        print('これがフィンガースナップである確率確率>>' + str(result[0][0]))
         if(result[0] >= 0.5):
+            print('これがフィンガースナップである確率確率>>' + str(result[0][0]))
             print('これは指パッチンです\n')
-            #detected_processing.do_get('http://localhost')
-            #detected_processing.change_my_room_color()
-        else: 
-            print('これは指パッチンではないです\n')
 
 
-        tmp = [False for i in range(0, 20)]
-    all.append(data)
 
 stream.close()
 p.terminate()
