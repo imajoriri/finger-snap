@@ -98,7 +98,8 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         now = datetime.datetime.now()
 
         isFinger = input("finger:1 \nnot finger: 2 \n>> ")
-        project_dir = "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/"
+        #project_dir = "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/"
+        project_dir = os.getcwd() + "/"
         if isFinger == "1":
             file_name = project_dir + 'sounds/finger/{0:%Y%m%d%H%M%S}.wav'.format(now)
         elif isFinger == "2":

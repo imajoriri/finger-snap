@@ -1,4 +1,8 @@
-# 実際に指パッチンを検出するファイル
+"""
+実際に指パッチンを検出するファイル
+以下で実行
+python detection.py (実行する秒数)
+"""
 
 import pyaudio
 import sys
@@ -8,20 +12,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 import urllib.request
 import tensorflow as tf
-import datetime
+import os
 
-# original modules
+project_dir = os.getcwd() + "/"
+# 自作モジュールのimport
 import sys
-project_dir = "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/"
-sys.path.append(project_dir + "my_modules/")
+sys.path.append(project_dir + "./my_modules/")
 import detected_processing
 import learning
-#import wave_sound
 
+# 単発音のデータの長さ
 data_len = 2048
+
+# tensorflowで必要な変数を取得
 x, p, t, loss, train_step, correct_prediction, accuracy, y = learning.learning_algorithm(tf, data_len)
+
+# tfのセッション初期化
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
+
+# `do_learning.py`で学習させたデータを取得
 saver = tf.train.Saver()
 saver.restore(sess, project_dir + "./model_data/model.ckpt")
 
@@ -29,8 +39,12 @@ chunk = 2**10
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-# 検知する時間
-RECORD_SECONDS = 100
+
+# 実行時に引数に時間を指定していたらその時間分実行し、指定していなかったらデフォルトで100秒
+if len(sys.argv) == 2:
+    RECORD_SECONDS = int(sys.argv[1]) 
+else:
+    RECORD_SECONDS = 100
 
 pa = pyaudio.PyAudio()
 
@@ -43,6 +57,7 @@ stream = pa.open(
 )
 
 # データを入れていく
+# allの長さは20以上にならない
 all = []
 
 # tmpは常に同じ長さ
@@ -64,30 +79,21 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
     tmp.pop(0)
 
     # 9,10, 11がのどれかがtrueで他がfalseだけなら反応
-    # なぜか最初の10回目に誤反応するため、12回目までは反応しないようにしておく
+    # iが11まではallの長さが足りないためエラーになる。
     if sum(tmp[9: 11]) >= 1 and sum(tmp) <= 3 and i >= 12:
-    #if i >= 12:
-        #print("単発音を認識しました。")
 
-        big_point_data = all[-10:-8] # 取得するbyteデータ
+        # 単発音の部分を取得する
+        big_point_data = all[-10:-8] 
 
         big_point_data = np.frombuffer(b''.join(big_point_data), dtype="int16") / 32768.0
         X = np.fft.fft(big_point_data)
         amplitudeSpectrum = [np.sqrt(c.real ** 2 + c.imag ** 2) for c in X]
 
-
-        #fs = 44100
-        #N = chunk * len(big_point_data) # FFTのサンプル数
-        #d = 1.0/fs
-        #freqList = np.fft.fftfreq(N, d) # (FFTのサンプル数(2**n), 1.0/fs) >> fsはサンプリングレート
-        #plot_X(freqList, fs)
-        #plt.show()
-        #print("フィンガースナップを検出しました。")
-
-        # 確率を算出
-        print(np.array([amplitudeSpectrum]).shape)
+        # 指パッチンである確率を算出
         result = sess.run(p, feed_dict={x: np.array([amplitudeSpectrum])})
+
         print('これがフィンガースナップである確率確率>>' + str(result[0][0]))
+
         if(result[0] >= 0.5):
             print('これは指パッチンです\n')
             #detected_processing.do_get('http://localhost')
@@ -97,8 +103,14 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 
 
         tmp = [False for i in range(0, 20)]
+
     all.append(data)
 
+    # allに入れっぱなしだとメモリを食う気がしたので、20以上なら0番目を削除
+    if len(all) >= 20:
+        all.pop(0)
+
 stream.close()
-p.terminate()
+pa.terminate()
+print('指パッチン検出を終了します。')
 

@@ -9,7 +9,7 @@ import wave
 import random
 
 # original modules
-project_dir = "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/"
+project_dir = os.getcwd() + "/"
 import sys
 sys.path.append(project_dir + "my_modules/")
 import learning
