@@ -1,4 +1,11 @@
-# 単発音を検知したら、/sounds/に保存して行く
+"""
+データを保存するファイル
+単発音を検知したら、/sounds/に保存して行く
+以下で実行。
+
+$ python input_data.py
+
+"""
 
 import pyaudio
 import sys
@@ -6,8 +13,8 @@ import time
 import wave
 import numpy as np
 import matplotlib.pyplot as plt
-import urllib.request
 import datetime
+import os
 
 def plot_x(x, N):
     # 波形を描画
@@ -29,7 +36,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 # 検知する時間
-RECORD_SECONDS = 500
+RECORD_SECONDS = 50
 
 p = pyaudio.PyAudio()
 
@@ -49,31 +56,23 @@ tmp = [False for i in range(0, 20)]
 
 print("検出を始めます。" + str(RECORD_SECONDS) + "秒間です")
 for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
-    # dataが(RECORD_SECONDS / 128)秒でのデータ
-    # このままではバイナリーデータなので変換する必要がある
-    # np.frombuffer(data, dtype="int16") / 32768.0
 
     byte_data = stream.read(chunk) # len >> 2048
     int_data = np.frombuffer(byte_data, dtype="int16") / 32768.0 # len >> 1024
     all.append(byte_data)
 
-    # 閾値
-    threshold = 0.8
-
     # npDataの中にthresoldより大きい数字があるかどうか
-    isThresholdOver = int_data[int_data >= threshold].sum() >= 1
+    threshold = 0.05
+    isThresholdOver = False
+    if max(int_data) > 0.05:
+        isThresholdOver = True
 
     tmp.append(isThresholdOver)
     tmp.pop(0)
 
     # 9,10, 11がのどれかがtrueで他がfalseだけなら反応
-    # なぜか最初の10回目に誤反応するため、12回目までは反応しないようにしておく
     if sum(tmp[9: 11]) >= 1 and sum(tmp) <= 3 and i >= 12:
-        print("フィンガースナップを認識しました。")
-
-        # 単発音を検出したあたりのデータをフーリエ変換している。
-        # フーリエ変換するデータの値の範囲を変更するならば >> all[-10:-8]
-        # サンプル数(N)を操作するならば、入力する音声のプロットを変更する必要があるので >> chunk
+        print("単発音を認識しました。")
 
         big_point_data = all[-10:-8] # 取得するbyteデータ
 
@@ -98,7 +97,6 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         now = datetime.datetime.now()
 
         isFinger = input("finger:1 \nnot finger: 2 \n>> ")
-        #project_dir = "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/"
         project_dir = os.getcwd() + "/"
         if isFinger == "1":
             file_name = project_dir + 'sounds/finger/{0:%Y%m%d%H%M%S}.wav'.format(now)
@@ -118,12 +116,6 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         tmp = [False for i in range(0, 20)]
         print("検出を終了します")
         break
-#        try:
-#            with urllib.request.urlopen('http://localhost:8000/') as response:
-#               html = response.read()
-#        except:
-#            print('get時のエラー')
-
 
 stream.close()
 p.terminate()
