@@ -95,8 +95,6 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 
         if(result[0] >= 0.5):
             print('これは指パッチンです\n')
-            #detected_processing.do_get('http://localhost')
-            #detected_processing.change_my_room_color()
         else: 
             print('これは指パッチンではないです\n')
 
