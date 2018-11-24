@@ -91,8 +91,6 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         # 指パッチンである確率を算出
         result = sess.run(p, feed_dict={x: np.array([amplitudeSpectrum])})
 
-        print('これがフィンガースナップである確率確率>>' + str(result[0][0]))
-
         if(result[0] >= 0.5):
             print('これは指パッチンです\n')
         else: 
