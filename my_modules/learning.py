@@ -11,8 +11,9 @@ def execution(num, sess, x, p, t, loss, train_step, correct_prediction, accuracy
             print(str(result[0]))
 
 def learning_algorithm(tf, data_len):
-    num_units1 = 40
-    num_units2 = 40
+    num_units1 = 200
+    num_units2 = 200
+    num_units3 = 200
 
     x = tf.placeholder(tf.float32, [None, data_len])
 
@@ -24,10 +25,14 @@ def learning_algorithm(tf, data_len):
     b2 = tf.Variable(tf.zeros([num_units2]))
     hidden2 = tf.nn.tanh(tf.matmul(hidden1, w2) + b2)
 
+    w3 = tf.Variable(tf.truncated_normal([num_units2, num_units3]))
+    b3 = tf.Variable(tf.zeros([num_units3]))
+    hidden3 = tf.nn.tanh(tf.matmul(hidden2, w3) + b3)
+
     w0 = tf.Variable(tf.zeros([num_units2, 1]))
     b0 = tf.Variable(tf.zeros([1]))
-    # TODO pがnanになる
-    y = tf.matmul(hidden2, w0) + b0
+    #y = tf.matmul(hidden2, w0) + b0
+    y = tf.matmul(hidden3, w0) + b0
     p = tf.nn.sigmoid(y)
 
     t = tf.placeholder(tf.float32, [None, 1])

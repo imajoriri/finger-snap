@@ -50,7 +50,7 @@ saver = tf.train.Saver()
 #saver.restore(sess, project_dir + "./model_data/model.ckpt")
 
 # 学習の実行数
-learning_num = 10000
+learning_num = 4000
 
 # 学習の実行
 learning.execution(learning_num, sess, x, p, t, loss, train_step, correct_prediction, accuracy, train_x, train_t, y)
