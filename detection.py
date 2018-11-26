@@ -33,7 +33,10 @@ sess.run(tf.global_variables_initializer())
 
 # `do_learning.py`で学習させたデータを取得
 saver = tf.train.Saver()
-saver.restore(sess, project_dir + "./model_data/model.ckpt")
+if const.FOR_PYAUDIO.RATE == 44100:
+    saver.restore(sess, project_dir + "./model_data_44100/model.ckpt")
+elif const.FOR_PYAUDIO.RATE == 16000:
+    saver.restore(sess, project_dir + "./model_data_16000/model.ckpt")
 
 # 実行時に引数に時間を指定していたらその時間分実行し、指定していなかったらデフォルトで100秒
 if len(sys.argv) == 2:

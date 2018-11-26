@@ -1,0 +1,2 @@
+model_checkpoint_path: "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/./model_data_16000/model.ckpt"
+all_model_checkpoint_paths: "/Users/imajo/Desktop/dev/google-assistant-mac/finger-snap/./model_data_16000/model.ckpt"
