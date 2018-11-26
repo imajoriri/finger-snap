@@ -16,6 +16,11 @@ import matplotlib.pyplot as plt
 import datetime
 import os
 
+project_dir = os.getcwd() + "/"
+# 自作モジュールのimport
+sys.path.append(project_dir + "./my_modules/")
+import const
+
 def plot_x(x, N):
     # 波形を描画
     plt.subplot(311)  # 3行1列のグラフの1番目の位置にプロット
@@ -31,21 +36,16 @@ def plot_X(freqList, fs):
     plt.xlabel("frequency [Hz]")
     plt.ylabel("amplitude spectrum")
 
-chunk = 1024
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
-RATE = 44100
-# 検知する時間
 RECORD_SECONDS = 50
 
 p = pyaudio.PyAudio()
 
 stream = p.open(
-    format = FORMAT,
-    channels = CHANNELS,
-    rate = RATE,
+    format = const.FOR_PYAUDIO.FORMAT,
+    channels = const.FOR_PYAUDIO.CHANNELS,
+    rate = const.FOR_PYAUDIO.RATE,
     input = True,
-    frames_per_buffer = chunk
+    frames_per_buffer = const.FOR_PYAUDIO.chunk
 )
 
 # データを入れていく
@@ -55,9 +55,9 @@ all = []
 tmp = [False for i in range(0, 20)]
 
 print("検出を始めます。" + str(RECORD_SECONDS) + "秒間です")
-for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
+for i in range(0, int(const.FOR_PYAUDIO.RATE / const.FOR_PYAUDIO.chunk * RECORD_SECONDS)):
 
-    byte_data = stream.read(chunk) # len >> 2048
+    byte_data = stream.read(const.FOR_PYAUDIO.chunk) # len >> 2048
     int_data = np.frombuffer(byte_data, dtype="int16") / 32768.0 # len >> 1024
     all.append(byte_data)
 
@@ -78,7 +78,7 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
 
         # 以下は固定
         fs = 44100
-        N = chunk * len(big_point_data) # FFTのサンプル数
+        N = const.FOR_PYAUDIO.chunk * len(big_point_data) # FFTのサンプル数
         d = 1.0/fs
 
         x = np.frombuffer(b''.join(big_point_data), dtype="int16") / 32768.0
@@ -99,17 +99,25 @@ for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
         isFinger = input("finger:1 \nnot finger: 2 \n>> ")
         project_dir = os.getcwd() + "/"
         if isFinger == "1":
-            file_name = project_dir + 'sounds/finger/{0:%Y%m%d%H%M%S}.wav'.format(now)
+            if const.FOR_PYAUDIO.RATE == 44100:
+                file_name = project_dir + 'sounds/finger-44100/{0:%Y%m%d%H%M%S}.wav'.format(now)
+            elif const.FOR_PYAUDIO.RATE == 16000:
+                file_name = project_dir + 'sounds/finger-16000/{0:%Y%m%d%H%M%S}.wav'.format(now)
+
         elif isFinger == "2":
-            file_name = project_dir + 'sounds/not-finger/{0:%Y%m%d%H%M%S}.wav'.format(now)
+            if const.FOR_PYAUDIO.RATE == 44100:
+                file_name = project_dir + 'sounds/not-finger-44100/{0:%Y%m%d%H%M%S}.wav'.format(now)
+            elif const.FOR_PYAUDIO.RATE == 16000:
+                file_name = project_dir + 'sounds/not-finger-16000/{0:%Y%m%d%H%M%S}.wav'.format(now)
+
         else:
             print("1 or 2を入力してください")
             break
 
         wf = wave.open(file_name, 'wb')
-        wf.setnchannels(CHANNELS)
-        wf.setsampwidth(p.get_sample_size(FORMAT))
-        wf.setframerate(RATE)
+        wf.setnchannels(const.FOR_PYAUDIO.CHANNELS)
+        wf.setsampwidth(p.get_sample_size(const.FOR_PYAUDIO.FORMAT))
+        wf.setframerate(const.FOR_PYAUDIO.RATE)
         wf.writeframes(b''.join(big_point_data))
         wf.close()
 

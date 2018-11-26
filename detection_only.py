@@ -19,6 +19,7 @@ project_dir = os.getcwd() + "/"
 sys.path.append(project_dir + "./my_modules/")
 import detected_processing
 import learning
+import const
 
 # 単発音のデータの長さ
 data_len = 2048
@@ -34,11 +35,6 @@ sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver()
 saver.restore(sess, project_dir + "./model_data/model.ckpt")
 
-chunk = 2**10
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
-RATE = 44100
-
 # 実行時に引数に時間を指定していたらその時間分実行し、指定していなかったらデフォルトで100秒
 if len(sys.argv) == 2:
     RECORD_SECONDS = int(sys.argv[1]) 
@@ -48,11 +44,11 @@ else:
 pa = pyaudio.PyAudio()
 
 stream = pa.open(
-    format = FORMAT,
-    channels = CHANNELS,
-    rate = RATE,
+    format = const.FOR_PYAUDIO.FORMAT,
+    channels = const.FOR_PYAUDIO.CHANNELS,
+    rate = const.FOR_PYAUDIO.RATE,
     input = True,
-    frames_per_buffer = chunk
+    frames_per_buffer = const.FOR_PYAUDIO.chunk
 )
 
 # データを入れていく
@@ -63,9 +59,9 @@ all = []
 tmp = [False for i in range(0, 20)]
 
 print('指パッチンの検出を始めます')
-for i in range(0, int(RATE / chunk * RECORD_SECONDS)):
+for i in range(0, int(const.FOR_PYAUDIO.RATE / const.FOR_PYAUDIO.chunk * RECORD_SECONDS)):
 
-    data = stream.read(chunk)
+    data = stream.read(const.FOR_PYAUDIO.chunk)
     npData = np.frombuffer(data, dtype="int16") / 32768.0
 
     # npDataの中にthresoldより大きい数字があるかどうか
