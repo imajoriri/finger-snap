@@ -4,6 +4,8 @@
 
 import urllib.request
 import json
+from tinydb import TinyDB, Query
+import datetime
 
 def do_get(url):
     try:
@@ -23,4 +25,9 @@ def change_my_room_color():
     f = urllib.request.urlopen(req)
     print(f.read().decode('utf-8'))
 
+def misdetection_log(isFingerSnap, filename):
+    db = TinyDB('./misdetection_log/' + filename)
+
+    now = datetime.datetime.now()
+    db.insert({'time': str(now), 'isFingerSnap':isFingerSnap})
 

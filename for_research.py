@@ -13,6 +13,9 @@ import matplotlib.pyplot as plt
 import urllib.request
 import tensorflow as tf
 import os
+import urllib.request
+import json
+import datetime
 
 project_dir = os.getcwd() + "/"
 # 自作モジュールのimport
@@ -61,8 +64,10 @@ all = []
 # tmpは常に同じ長さ
 tmp = [False for k in range(0, 20)]
 
+now = datetime.datetime.now()
+misdetection_log_filename = str(now.month) + "-" + str(now.day) + "-" + str(now.hour) + "-" + str(now.minute) + ".json"
+
 print('指パッチンの検出を始めます')
-#for i in range(0, int(const.FOR_PYAUDIO.RATE / const.FOR_PYAUDIO.chunk * RECORD_SECONDS)):
 i = 0
 while True:
     i += 1
@@ -97,8 +102,10 @@ while True:
 
         if(result[0] >= 0.5):
             print('これは指パッチンです\n')
+            detected_processing.misdetection_log(True, misdetection_log_filename)
         else: 
             print('これは指パッチンではないです\n')
+            detected_processing.misdetection_log(False, misdetection_log_filename)
 
 
         tmp = [False for k in range(0, 20)]
