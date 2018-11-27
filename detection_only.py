@@ -60,7 +60,7 @@ stream = pa.open(
 all = []
 
 # tmpは常に同じ長さ
-tmp = [False for i in range(0, 20)]
+tmp = [False for k in range(0, 20)]
 
 print('指パッチンの検出を始めます')
 for i in range(0, int(const.FOR_PYAUDIO.RATE / const.FOR_PYAUDIO.chunk * RECORD_SECONDS)):
@@ -97,7 +97,7 @@ for i in range(0, int(const.FOR_PYAUDIO.RATE / const.FOR_PYAUDIO.chunk * RECORD_
             print('これは指パッチンではないです\n')
 
 
-        tmp = [False for i in range(0, 20)]
+        tmp = [False for k in range(0, 20)]
 
     all.append(data)
 
