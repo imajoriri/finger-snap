@@ -68,9 +68,9 @@ for i in range(0, int(const.FOR_PYAUDIO.RATE / const.FOR_PYAUDIO.chunk * RECORD_
     npData = np.frombuffer(data, dtype="int16") / 32768.0
 
     # npDataの中にthresoldより大きい数字があるかどうか
-    threshold = 0.05
+    threshold = 0.03
     isThresholdOver = False
-    if max(npData) > 0.05:
+    if max(npData) > threshold:
         isThresholdOver = True
 
     tmp.append(isThresholdOver)

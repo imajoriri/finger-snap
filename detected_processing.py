@@ -1,4 +1,6 @@
-# 指パッチンを検出した時に実行する処理
+"""
+指パッチンを検出した時に実行する処理
+"""
 
 import urllib.request
 import json
