@@ -1,7 +1,8 @@
 """
 実際に指パッチンを検出するファイル
+基本はdetection.pyと同じだが、テスト用として使う
 以下で実行
-python detection.py (実行する秒数)
+python detection_only.py (実行する秒数)
 """
 
 import pyaudio

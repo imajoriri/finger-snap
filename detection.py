@@ -16,8 +16,8 @@ import os
 
 project_dir = os.getcwd() + "/"
 # 自作モジュールのimport
-sys.path.append(project_dir + "./my_modules/")
 import detected_processing
+sys.path.append(project_dir + "./my_modules/")
 import learning
 import const
 
@@ -94,8 +94,6 @@ for i in range(0, int(const.FOR_PYAUDIO.RATE / const.FOR_PYAUDIO.chunk * RECORD_
 
         if(result[0] >= 0.5):
             print('これは指パッチンです\n')
-            #detected_processing.do_get('http://localhost')
-            #detected_processing.change_my_room_color()
         else: 
             print('これは指パッチンではないです\n')
 
