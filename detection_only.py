@@ -18,7 +18,6 @@ import os
 project_dir = os.getcwd() + "/"
 # 自作モジュールのimport
 sys.path.append(project_dir + "./my_modules/")
-import detected_processing
 import learning
 import const
 
