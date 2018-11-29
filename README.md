@@ -18,13 +18,15 @@ https://t.co/6SyPTS70xw
 
 https://t.co/CiFGXvl39I
 
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
 # 仕組み
 
 どういう仕組みで動いているか、コード無しで説明した記事になります。
 
 [非エンジニアでもわかる指パッチンで電球を色っぽくした話](https://qiita.com/imajoriri/items/0d1120917714bc4f3727)
+
+# 環境
+
+随時記入予定
 
 # インストール
 

@@ -18,7 +18,7 @@ import os
 project_dir = os.getcwd() + "/"
 # 自作モジュールのimport
 sys.path.append(project_dir + "./my_modules/")
-import learning
+mport learning
 import const
 
 # 単発音のデータの長さ

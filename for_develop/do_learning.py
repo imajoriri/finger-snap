@@ -26,10 +26,11 @@ tf.set_random_seed(20160615)
 # 単発音のデータの長さ
 data_len = 2048
 
-# トレーニングデータの取得
+# トレーニングデータを入れる変数の取得
 train_x = np.empty((0, data_len), int)
 train_t = np.array([])
 
+# RATEによって取得するデータを変更
 if const.FOR_PYAUDIO.RATE == 44100:
 
     finger_wav_files = os.listdir(project_dir + "./sounds/finger-44100")
