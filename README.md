@@ -11,7 +11,6 @@
 
 https://t.co/6SyPTS70xw
 
-
 ## 部屋の電気操作
 
 指パッチンで部屋の電気を色っぽくします。
@@ -26,11 +25,35 @@ https://t.co/CiFGXvl39I
 
 # 環境
 
-随時記入予定
+以下の環境で動作を確認済みです。
+
+* Mac OS X(10.14.1)
+* python3.5.1
 
 # インストール
 
-随時記入予定
+## pyaudioのインストール
+
+pythonで音声データを扱うために`pyaudio`を使用します。
+以下などを参考にインストールしてください。
+
+[macOSにpyaudioをインストールする](https://qiita.com/mayfair/items/abb59ebf503cc294a581)
+
+## そのほか必要なモジュールのインストール
+
+必要なモジュールをインストールします。
+
+```
+$ pip install numpy numpy matplotlib tensorflow wave 
+```
+
+## このアプリケーションのインストール
+
+`git clone`でローカルにダウンロードします。
+
+```
+$ git clone https://github.com/imajoriri/finger-snap.git
+```
 
 # 使い方
 
