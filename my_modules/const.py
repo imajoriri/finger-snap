@@ -8,4 +8,6 @@ class FOR_PYAUDIO:
     #RATE = 44100
     RATE = 16000
 
+class FOR_TENSORFLOW:
+    DATA_LEN = 2048
 
