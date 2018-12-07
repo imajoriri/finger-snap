@@ -20,6 +20,7 @@ project_dir = os.getcwd() + "/"
 # 自作モジュールのimport
 sys.path.append(project_dir + "./my_modules/")
 import const
+import plot
 
 # 検知する時間[秒]
 RECORD_SECONDS = 50
@@ -63,16 +64,22 @@ def main():
             print("単発音を認識しました。")
     
             big_point_data = all[-10:-8] # 取得するbyteデータ
+
+            fs = const.FOR_PYAUDIO.chunk
+            N = const.FOR_PYAUDIO.chunk * len(big_point_data) # FFTのサンプル数
+            #N = fs * len(all[-17:-1]) # FFTのサンプル数
+            d = 1.0/fs
     
             x = np.frombuffer(b''.join(big_point_data), dtype="int16") / 32768.0
+            #x = np.frombuffer(b''.join(all[-17:-1]), dtype="int16") / 32768.0 * 1.8
             X = np.fft.fft(x)
             amplitudeSpectrum = [np.sqrt(c.real ** 2 + c.imag ** 2) for c in X]
             freqList = np.fft.fftfreq(N, d) # (FFTのサンプル数(2**n), 1.0/fs) >> fsはサンプリングレート
+
     
             # プロット
-            #plot_x(x, N)
-            #plot_X(freqList, const.FOR_TENSORFLOW.DATA_LEN)
-            #plt.show()
+            #plot.plot_x(x, N)
+            #plot.plot_X(freqList, amplitudeSpectrum, fs)
             #plt.show()
     
             # 検出した部分をwavファイルで保存
