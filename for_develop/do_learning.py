@@ -88,9 +88,9 @@ def main():
     # 学習の実行
     learning.execution(learning_num, sess, x, p, t, loss, train_step, correct_prediction, accuracy, train_x, train_t, y)
     
-    print("正解データ数は:" + str(len(finger_wav_files)))
-    print("不正解データ数は:" + str(len(not_finger_wav_files)))
-    print("学習回数は: " + str(learning_num))
+    #print("正解データ数は:" + str(len(finger_wav_files)))
+    #print("不正解データ数は:" + str(len(not_finger_wav_files)))
+    #print("学習回数は: " + str(learning_num))
 
     save_tensorflow_data(saver, sess)
     

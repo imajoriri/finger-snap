@@ -83,9 +83,9 @@ def main():
         npData = np.frombuffer(data, dtype="int16") / 32768.0
     
         # npDataの中にthresoldより大きい数字があるかどうか
-        threshold = 0.05
+        threshold = 0.5
         isThresholdOver = False
-        if max(npData) > 0.05:
+        if max(npData) > threshold:
             isThresholdOver = True
     
         tmp.append(isThresholdOver)

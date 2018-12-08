@@ -7,8 +7,8 @@ def execution(num, sess, x, p, t, loss, train_step, correct_prediction, accuracy
         if i % 100 == 0:
             loss_val, acc_val = sess.run([loss, accuracy], feed_dict={x:train_x, t:train_t})
             result = sess.run(y, feed_dict={x: train_x})
-            print ('Step: %d, Loss: %f, Accuracy: %f,'% (i, loss_val, acc_val))
-            print(str(result[0]))
+            print('...学習中...')
+            #print ('Step: %d, Loss: %f, Accuracy: %f,'% (i, loss_val, acc_val))
 
 def learning_algorithm(tf, data_len):
     num_units1 = 200
