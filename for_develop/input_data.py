@@ -111,6 +111,7 @@ def main():
 
             # ./sounds ディレクトリが存在しなかったら作成する
             if os.path.isdir(project_dir + 'sounds') == False:
+                os.mkdir(project_dir + "sounds")
                 os.mkdir(project_dir + "sounds/finger-16000")
                 os.mkdir(project_dir + "sounds/finger-44100")
                 os.mkdir(project_dir + "sounds/not-finger-16000")
