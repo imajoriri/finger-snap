@@ -108,6 +108,13 @@ def main():
             else:
                 print("1 or 2を入力してください")
                 break
+
+            # ./sounds ディレクトリが存在しなかったら作成する
+            if os.path.isdir(project_dir + 'sounds') == False:
+                os.mkdir(project_dir + "sounds/finger-16000")
+                os.mkdir(project_dir + "sounds/finger-44100")
+                os.mkdir(project_dir + "sounds/not-finger-16000")
+                os.mkdir(project_dir + "sounds/not-finger-44100")
     
             # ファイル名をfile_nameとして保存
             wf = wave.open(file_name, 'wb')
