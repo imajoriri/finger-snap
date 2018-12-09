@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 実際に指パッチンを検出するファイル
 基本はdetection.pyと同じだが、テスト用として使う
@@ -83,7 +85,7 @@ def main():
         npData = np.frombuffer(data, dtype="int16") / 32768.0
     
         # npDataの中にthresoldより大きい数字があるかどうか
-        threshold = 0.5
+        threshold = 0.3
         isThresholdOver = False
         if max(npData) > threshold:
             isThresholdOver = True
